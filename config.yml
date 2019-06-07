@@ -1,0 +1,21 @@
+---
+db_url: sqlite:////tmp/daily.db
+#db_uri: mysql://daily_user:CHANGEME@127.0.0.1/daily?charset=utf8mb4
+debug: True
+
+tasks:
+  morning:
+    - name: Brush Teeth
+      description: You should brush your teeth everyday.
+    - name: Make Bed
+      description: A description about making a bed.
+  afternoon:
+    - name: Eat Lunch
+      description: A description about eating lunch everyday.
+  header3:
+    - name: Some task
+      description: A description about some other task
+    - name: Another task
+      description: A description about another task
+    - name: Basic task
+      description: A description about a basic task

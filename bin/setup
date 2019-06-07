@@ -1,0 +1,38 @@
+#!/usr/bin/env python
+
+
+import optparse
+
+from daily.db import session, init_db, delete_db, verify_db_ready
+from daily.logger import logger
+from daily.config import config
+from daily.models.header import Header
+from daily.models.task import Task
+
+
+parser = optparse.OptionParser()
+parser.add_option('--overwrite-db', action="store_true", default=False)
+
+options, arguments = parser.parse_args()
+
+logger.info("Starting Setup")
+
+if not options.overwrite_db:
+    if verify_db_ready(session):
+        logger.error("Exiting script and not overwriting db...must use --overwrite-db to overwrite data.")
+        exit()
+    else:
+        # Database doesn't exist, so continuing on to setup script
+        logger.debug("Database doesn't exist yet...")
+
+logger.info("Setting up DB")
+delete_db(session)
+init_db(session)
+
+for header_name, tasks in config.tasks.items():
+    header_obj = Header(name=header_name)
+    session.add(header_obj)
+    for task in tasks:
+        task_obj = Task(name=task['name'], description=task['description'], header=header_obj)
+        session.add(task_obj)
+session.commit()

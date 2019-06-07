@@ -1,0 +1,32 @@
+---
+version: '3.7'
+services:
+  nginx:
+    image: daily/nginx
+    build:
+      context: .
+      dockerfile: ./docker/nginx/Dockerfile
+      cache_from:
+        - daily/nginx
+        - nginx:latest
+    depends_on:
+      - web
+    ports:
+      - 80:80
+    restart: on-failure
+    networks:
+      - default
+  web:
+    image: daily/web
+    build:
+      context: .
+      dockerfile: ./docker/web/Dockerfile
+      cache_from:
+        - daily/web
+        - web:latest
+    restart: on-failure
+    networks:
+      - default
+
+networks:
+  default:
