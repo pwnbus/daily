@@ -1,7 +1,6 @@
 ---
-db_uri: sqlite:////tmp/daily.db
-#db_uri: mysql://daily_user:CHANGEME@127.0.0.1/daily?charset=utf8mb4
-debug: True
+db_uri: mysql://daily_user:CHANGEME@mysql/daily?charset=utf8mb4
+debug: False
 
 tasks:
   morning:

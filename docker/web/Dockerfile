@@ -1,12 +1,17 @@
-FROM python:3
+FROM daily/base
 
-WORKDIR /usr/src/app
+USER root
 
-COPY setup.py /usr/src/app/setup.py
-COPY config.yml /usr/src/app/config.yml
-COPY bin /usr/src/app/bin
-COPY dashboard /usr/src/app/dashboard
+# Install curl for docker health check
+RUN \
+  apt-get update && \
+  apt-get install -y curl && \
+  rm -rf /var/lib/apt/lists/*
 
-RUN pip install -e .
+USER daily
 
-CMD ["/usr/src/app/bin/web"]
+COPY bin/web /app/bin/web
+
+CMD ["./wait-for-container.sh", "bootstrap", "/app/bin/web"]
+
+EXPOSE 5000
