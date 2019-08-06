@@ -6,22 +6,46 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Daily Tasklist</title>
     <script src="{{ url_for('static', filename='bootstrap.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='jquery.min.js') }}"></script>
     <link href="{{ url_for('static', filename='bootstrap.min.css') }}" rel="stylesheet">
     <link href="{{ url_for('static', filename='main.css') }}" rel="stylesheet">
   </head>
   <body>
+    <script>
+      function cardClicked(task_id) {
+        $.ajax({
+          cache: false,
+          url: '/task/' + task_id + '/toggle',
+          dataType: 'json',
+          success: function(data) {
+            // console.log(data['status']);
+            if (data['status'].includes('Completed')){
+              $("#task_" + task_id).removeClass('incomplete');
+              $("#task_" + task_id).addClass('complete');
+            }
+            else {
+              $("#task_" + task_id).removeClass('complete');
+              $("#task_" + task_id).addClass('incomplete');
+            }
+          },
+          error: function(data) {
+            console.log("ERROR: " + data['error']);
+            alert("ERROR: " + data['error']);
+          }
+        });
+      }
+    </script>
+
     {% for header in tasks_data %}
     <div class="container md-page" style="padding-top: 20px;">
       <h2><center>{{ header.name }}</center></h2>
       <div class="card-columns">
         {% for task in header.tasks %}
-          <a href="{{ task.name }}" rel="noopener noreferrer" class="thumbnail">
-            <div class="card" onmouseover="this.style.background='#d3d3d3';" onmouseout="this.style.background='white';">
-              <div class="card-body text-center">
-                <p class="card-text">{{ task.name }}</p>
-              </div>
-            </div>
-          </a>
+        <div id="task_{{ task.id }}" class="card {{ task.status() }}" onclick='cardClicked("{{ task.id }}");'>
+          <div class="card-body text-center">
+            <p class="card-text">{{ task.name }}</p>
+          </div>
+        </div>
         {% endfor %}
       </div>
     </div>
