@@ -18,6 +18,7 @@ run:
 ## Build Commands
 .PHONY: build
 build:
+	docker-compose -f $(MAIN_DOCKER) -p $(PROJECT_NAME) $(BUILD_MODE) $(PARALLEL) base
 	docker-compose -f $(MAIN_DOCKER) -p $(PROJECT_NAME) $(BUILD_MODE) $(PARALLEL)
 
 ## Stop Commands
